@@ -1,0 +1,30 @@
+# Exact versions this project was built and tested with.
+# Install with:  pip install -r requirements.txt
+
+# Web framework and server
+fastapi==0.146.0
+uvicorn[standard]==0.54.0
+
+# Database
+SQLAlchemy==2.1.5
+psycopg2-binary==2.9.13
+
+# Configuration and validation
+python-dotenv==1.2.4
+pydantic==2.14.1
+email-validator==2.3.0
+
+# Authentication (Google OAuth2 + JWT)
+PyJWT==2.15.1
+google-auth==2.62.0
+requests==2.34.2
+
+# AI (Gemini primary, Claude fallback)
+langchain-core==1.6.12
+langchain-google-genai==4.4.2
+langchain-anthropic==1.7.7
+
+# Integrations and reports
+httpx==0.28.1
+reportlab==5.1.0
+openpyxl==3.1.5
