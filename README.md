@@ -35,11 +35,17 @@ n8n with the Gmail API · React · Tailwind CSS · Chart.js
             routers/      API endpoints: auth, queries, users, notifications, admin, automation
             schemas/      request and response shapes
             services/     AI, routing, query workflow, notifications, analytics, reports
-            static/js/    dashboard screens: core, student, staff, admin, app
-            dashboard.html
+            main.py       creates the app, registers the routers and serves the frontend
         database/schema.sql
         scripts/          demo data and manual test helpers
+    frontend/
+        index.html        loads React, Tailwind CSS, Chart.js and the dashboard scripts
+        js/               dashboard screens: core, student, staff, admin, app
     n8n/                  workflows: email delivery, hourly SLA check, email queries, daily summary
+
+The backend serves the frontend by default. To host the frontend separately (for example on
+Vercel), set `window.API_BASE_URL` in `frontend/index.html` to the backend's address and add
+the frontend's address to `CORS_ORIGINS` in the backend's `.env`.
 
 ## Running locally
 

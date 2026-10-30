@@ -1,0 +1,79 @@
+{
+  "name": "VU - Daily Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "6e41a9e2-bfb7-4923-bf05-22ccf9772df7",
+      "name": "Every Morning"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/automation/daily-summary",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "bb545ffb-2bd3-4362-adbf-fa3900509f42",
+      "name": "Send Daily Summary",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mjOf2TcVLYdm8i8I",
+          "name": "VU service key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every Morning": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Karachi",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "538c027d-8726-4367-8c8f-48cbdd86d5c9",
+  "meta": {
+    "instanceId": "1717fca07e25ab29e97b0b46b31707ca3f374afc6c5c29f5d66a3776d77403e9"
+  },
+  "id": "tBzRtaaY7HSnGgTd",
+  "tags": []
+}

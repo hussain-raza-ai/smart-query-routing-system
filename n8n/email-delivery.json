@@ -1,0 +1,108 @@
+{
+  "name": "VU - Email Delivery",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vu-query-events",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        1424
+      ],
+      "id": "740a2ce0-5f4e-49fd-8ea1-b62ad30ec356",
+      "name": "Webhook",
+      "webhookId": "6b1e9c42-7a3d-4f58-b2c1-8d9e0f1a2b03",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "QGPBxxDrQIFJEj7J",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.emails",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        1424
+      ],
+      "id": "95572bf3-52ce-47ca-b04c-106642d54c2d",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        1424
+      ],
+      "id": "d93304a5-833c-48df-8862-622fa7f8c88b",
+      "name": "Send Email",
+      "webhookId": "9e2f4a61-5b7c-4d8e-a3f2-6b7c8d9e0f04",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5dMqCkZ8h6FRXpvX",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "bd5e346b-1c7b-4ed4-bcd0-71036d9c152c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1717fca07e25ab29e97b0b46b31707ca3f374afc6c5c29f5d66a3776d77403e9"
+  },
+  "id": "Iu6TIixmUgp12efA",
+  "tags": []
+}

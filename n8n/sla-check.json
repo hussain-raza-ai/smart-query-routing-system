@@ -1,0 +1,75 @@
+{
+  "name": "VU SLA Hourly Check",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        112
+      ],
+      "id": "e26c07ce-66b6-41ec-8748-a43b2dd782b0",
+      "name": "Every Hour"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/automation/sla-check",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        112
+      ],
+      "id": "03d4e854-30ae-4920-9c90-d2d4214a4a3e",
+      "name": "Run SLA Check",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mjOf2TcVLYdm8i8I",
+          "name": "VU service key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every Hour": {
+      "main": [
+        [
+          {
+            "node": "Run SLA Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0b4b7ce9-2310-43cf-bf90-cdcc4c905a58",
+  "meta": {
+    "instanceId": "1717fca07e25ab29e97b0b46b31707ca3f374afc6c5c29f5d66a3776d77403e9"
+  },
+  "id": "WVXWbE1TksZ1wdJt",
+  "tags": []
+}

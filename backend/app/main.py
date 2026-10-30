@@ -2,7 +2,8 @@
 Application entry point.
 
 Creates the FastAPI app, applies cross-cutting settings (CORS, error
-handling), registers the routers and serves the dashboard.
+handling), registers the routers and serves the frontend, which lives in
+its own folder next to the backend (smart-query-routing-system/frontend).
 
 Run locally (from the backend folder) with:
     python -m uvicorn app.main:app --reload --reload-dir app --port 8001
@@ -18,9 +19,8 @@ from app.core.config import settings
 from app.routers import admin, auth, automation, notifications, queries, users
 from app.services.query_service import WorkflowError
 
-APP_DIR = Path(__file__).parent
-DASHBOARD_FILE = APP_DIR / "dashboard.html"
-STATIC_DIR = APP_DIR / "static"
+# backend/app/main.py -> parents[2] is the project folder that holds frontend/
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
 
 app = FastAPI(
     title="Smart Query Routing & Email Automation System",
@@ -28,8 +28,8 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# The dashboard is served by this same server, so CORS only matters if the
-# frontend is hosted elsewhere later (e.g. Vercel). Only listed origins may call the API.
+# The frontend is normally served by this same server. If it is hosted elsewhere
+# (e.g. Vercel), list its address in CORS_ORIGINS so the browser may call the API.
 if settings.CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
@@ -53,8 +53,8 @@ app.include_router(notifications.router)
 app.include_router(admin.router)
 app.include_router(automation.router)
 
-# The dashboard's JavaScript files (core.js, student.js, staff.js, admin.js, app.js).
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+# The dashboard's scripts: core.js, student.js, staff.js, admin.js and app.js.
+app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="frontend")
 
 
 @app.get("/health", tags=["System"])
@@ -66,4 +66,4 @@ def health_check():
 @app.get("/", include_in_schema=False)
 @app.get("/dashboard", include_in_schema=False)
 def serve_dashboard():
-    return FileResponse(DASHBOARD_FILE)
+    return FileResponse(FRONTEND_DIR / "index.html")

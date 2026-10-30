@@ -13,6 +13,9 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 const TOKEN_KEY = "sqr_token";
 
+// Where the backend lives; empty means the same server that serves this page (see index.html).
+const API_BASE = window.API_BASE_URL || "";
+
 const STATUS_STYLES = {
   "Pending": "bg-amber-50 text-amber-700 border-amber-200",
   "In Progress": "bg-blue-50 text-blue-700 border-blue-200",
@@ -49,7 +52,7 @@ async function api(path, { method = "GET", body, raw = false } = {}) {
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
 
-  const response = await fetch(path, {
+  const response = await fetch(API_BASE + path, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),

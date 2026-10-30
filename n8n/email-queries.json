@@ -1,0 +1,140 @@
+{
+  "name": "VU - Email Queries",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "in:inbox -from:me -from:mailer-daemon",
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        32
+      ],
+      "id": "a22f7ae4-5da9-4f0f-8188-86539c583113",
+      "name": "New Email",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5dMqCkZ8h6FRXpvX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/automation/email-query",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from_email",
+              "value": "={{ $json.from.value[0].address }}"
+            },
+            {
+              "name": "from_name",
+              "value": "={{ $json.from.value[0].name }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "name": "body",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        464,
+        32
+      ],
+      "id": "67367ca4-67b1-4d01-a2e5-c816502b5230",
+      "name": "Create Query",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mjOf2TcVLYdm8i8I",
+          "name": "VU service key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('New Email').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        32
+      ],
+      "id": "2b5acd82-4c21-4426-b4ec-aff0cc2a4738",
+      "name": "Mark As Read",
+      "webhookId": "b1a4c678-9dae-4fb0-8213-4d5e6f7a8b24",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5dMqCkZ8h6FRXpvX",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Email": {
+      "main": [
+        [
+          {
+            "node": "Create Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Query": {
+      "main": [
+        [
+          {
+            "node": "Mark As Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a08a3a6c-896e-4ef4-ac89-c2c587dae009",
+  "meta": {
+    "instanceId": "1717fca07e25ab29e97b0b46b31707ca3f374afc6c5c29f5d66a3776d77403e9"
+  },
+  "id": "DFnGdfg6elXdCjYl",
+  "tags": []
+}
